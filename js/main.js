@@ -13,6 +13,38 @@ const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
+/* ─── Hero video: force autoplay on mobile ───
+   iOS/Safari often ignore the autoplay attribute. Autoplay only works when the
+   video is muted + playsinline, and frequently needs an explicit play() call,
+   with retries on ready/visibility and a final fallback on first interaction. */
+(function initHeroVideo() {
+  const v = document.querySelector('.hero__video');
+  if (!v) return;
+
+  v.muted = true;              // set the property, not just the attribute
+  v.setAttribute('muted', '');
+  v.playsInline = true;
+
+  const tryPlay = () => {
+    const p = v.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  };
+
+  tryPlay();
+  v.addEventListener('loadeddata', tryPlay, { once: true });
+  v.addEventListener('canplay', tryPlay, { once: true });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
+
+  // Last resort: kick off on the first tap/click if autoplay was blocked
+  const onInteract = () => {
+    tryPlay();
+    window.removeEventListener('touchstart', onInteract);
+    window.removeEventListener('click', onInteract);
+  };
+  window.addEventListener('touchstart', onInteract, { passive: true });
+  window.addEventListener('click', onInteract);
+})();
+
 /* ─── Hero entrance ─── */
 (function initHero() {
   const els = {
