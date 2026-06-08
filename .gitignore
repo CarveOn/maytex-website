@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+
+# Dependencies / tooling
+node_modules/
+package.json
+package-lock.json
+skills-lock.json
+
+# Claude Code + agent tooling
+.claude/
+.agents/
+.remember/
+
+# Internal project docs (not for public repo)
+CLAUDE.md
+PRODUCT.md
+copy.md
+
+# Rejected / superseded drafts
+index-v2.html
+video/maytex-A.mp4
+video/maytex-C.mp4
+video/Maytex Video.mp4
+
+# Redundant raw image drops (site uses copies in "Web assets/")
+img/image *.webp
+img/image *.png
